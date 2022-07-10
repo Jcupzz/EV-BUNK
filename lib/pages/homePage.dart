@@ -31,9 +31,9 @@ class _HomePageState extends State<HomePage> {
   }
 
 //
-  // late LatLng currentPostion = LatLng(11.783657, 75.514773);
+  late LatLng currentPostion = LatLng(11.783657, 75.514773);
 
-  late LatLng currentPostion;
+  // late LatLng currentPostion;
 
   void _getUserLocation() async {
     var position = await Geolocator.getCurrentPosition(
@@ -67,12 +67,13 @@ class _HomePageState extends State<HomePage> {
 
   void _getAllLatLongFromFb() async {
     await FirebaseFirestore.instance
-        .collection("allAutos")
+        .collection("ev_bunks")
         // .where('isRequested', isEqualTo: true)
         .get()
         .then(
             (QuerySnapshot querySnapshot) => querySnapshot.docs.forEach((doc) {
-                  print(doc.get('lat'));
+                  print("\n\n#############################: " +
+                      doc.get('lat').toString());
                   setState(() {});
                   myMarker.add(
                     Marker(
@@ -224,7 +225,7 @@ class _HomePageState extends State<HomePage> {
   //functions
   //functions
 
-  void _getUserLocationPermission() async {
+  Future _getUserLocationPermission() async {
     bool serviceEnabled;
     LocationPermission permission;
 
