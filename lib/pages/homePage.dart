@@ -31,7 +31,9 @@ class _HomePageState extends State<HomePage> {
   }
 
 //
-  late LatLng currentPostion = LatLng(11.783657, 75.514773);
+  // late LatLng currentPostion = LatLng(11.783657, 75.514773);
+
+  late LatLng currentPostion;
 
   void _getUserLocation() async {
     var position = await Geolocator.getCurrentPosition(
@@ -58,13 +60,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   getIcons() async {
-    // icon = await BitmapDescriptor.fromAssetImage(
-    //     ImageConfiguration(
-    //       devicePixelRatio: 16 / 9,
-    //     ),
-    //     "assets/auto_img.png");
     final Uint8List markerIcon =
-        await getBytesFromAsset('assets/auto_img.png', 200);
+        await getBytesFromAsset('assets/ev_bunk.png', 200);
     icon = BitmapDescriptor.fromBytes(markerIcon);
   }
 
