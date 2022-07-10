@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
 
   getIcons() async {
     final Uint8List markerIcon =
-        await getBytesFromAsset('assets/ev_bunk.png', 200);
+        await getBytesFromAsset('assets/auto_img.png', 200);
     icon = BitmapDescriptor.fromBytes(markerIcon);
   }
 
