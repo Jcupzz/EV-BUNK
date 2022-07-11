@@ -23,6 +23,7 @@ class _HomePageState extends State<HomePage> {
   late GoogleMapController mapController;
   List<Marker> myMarker = [];
   late DocumentSnapshot documentSnapshot;
+  late String sd = "";
   var icon;
   void _onMapCreated(GoogleMapController controller) {
     setState(() {
@@ -36,17 +37,20 @@ class _HomePageState extends State<HomePage> {
   // late LatLng currentPostion;
 
   void _getUserLocation() async {
-    var position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.best);
-    if (position != null) {
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .then((position) {
       setState(() {
         currentPostion = LatLng(position.latitude, position.longitude);
       });
-    } else {
-      setState(() {
-        currentPostion = LatLng(11.783657, 75.514773);
-      });
-    }
+    });
+
+    // if (position != null) {
+
+    // } else {
+    //   // setState(() {
+    //   //   currentPostion = LatLng(11.783657, 75.514773);
+    //   // });
+    // }
   }
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
@@ -61,13 +65,14 @@ class _HomePageState extends State<HomePage> {
 
   getIcons() async {
     final Uint8List markerIcon =
-        await getBytesFromAsset('assets/auto_img.png', 200);
+        await getBytesFromAsset('assets/ev_bunk.png', 200);
     icon = BitmapDescriptor.fromBytes(markerIcon);
   }
 
   void _getAllLatLongFromFb() async {
-    await FirebaseFirestore.instance
-        .collection("ev_bunks")
+    var ref = FirebaseFirestore.instance.collection('ev_bunks');
+
+    var res = await ref
         // .where('isRequested', isEqualTo: true)
         .get()
         .then(
@@ -84,14 +89,32 @@ class _HomePageState extends State<HomePage> {
                         setState(() {
                           showDetailsButton = true;
                           documentSnapshot = doc;
+                          sd = getTitle(doc.id, ref);
+                          print("CURRENT DOCUMENT IS: " + doc.id.toString());
                         });
                       },
                       position: LatLng(doc.get('lat'), doc.get('long')),
-                      // infoWindow:
-                      //     InfoWindow(title: doc['iName'], snippet: doc['iAddress']),
+                      infoWindow: InfoWindow(
+                        title: sd,
+                      ),
+                      // InfoWindow(title: doc.get('field'), snippet: "Ather: " doc.get('field')),
                     ),
                   );
                 }));
+  }
+
+  String getTitle(String id, CollectionReference<Map<String, dynamic>> ref) {
+    print("SUCESSEFEFDFDFDF: " + id.toString());
+    var snapshot;
+
+    ref.doc(id).collection("port").get().then((QuerySnapshot querySnapshot) {
+      print("SUCESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS: " +
+          querySnapshot.docs[0].data().toString());
+
+      snapshot = querySnapshot.docs[0].data();
+    });
+
+    return snapshot.toString();
   }
 
   @override
@@ -125,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                     onMapCreated: _onMapCreated,
                     initialCameraPosition: CameraPosition(
                       target: currentPostion,
-                      zoom: 10,
+                      zoom: 6,
                     ),
                   ),
                   (showDetailsButton)
