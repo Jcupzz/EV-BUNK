@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "912600332939",
+    "project_id": "ev-bunk",
+    "storage_bucket": "ev-bunk.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:912600332939:android:6635e632e81a73aeef728e",
+        "android_client_info": {
+          "package_name": "com.example.ev_bunk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "912600332939-ujm7hcerpka0av4poass0s4kav8o0a3k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQcdnT6K0q_8ap6ZNZ3Xs_taVyhDg7fx4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "912600332939-ujm7hcerpka0av4poass0s4kav8o0a3k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
