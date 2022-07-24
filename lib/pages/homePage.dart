@@ -25,34 +25,43 @@ class _HomePageState extends State<HomePage> {
   late DocumentSnapshot documentSnapshot;
   late String sd = "";
   List<String> selected_times = [];
-  List<String> timings = [
-    "01:00 - 02:00",
-    "02:00 - 03:00",
-    "03:00 - 04:00",
-    "04:00 - 05:00",
-    "05:00 - 06:00",
-    "06:00 - 07:00",
-    "07:00 - 08:00",
-    "08:00 - 09:00",
-    "09:00 - 10:00",
-    "10:00 - 11:00",
-    "11:00 - 12:00",
-    "12:00 - 13:00",
-    "13:00 - 14:00",
-    "14:00 - 15:00",
-    "15:00 - 16:00",
-    "16:00 - 17:00",
-    "17:00 - 18:00",
-    "18:00 - 19:00",
-    "19:00 - 20:00",
-    "20:00 - 21:00",
-    "21:00 - 22:00",
-    "22:00 - 23:00",
-    "23:00 - 00:00",
-    "00:00 - 01:00"
-  ];
+  List<String> ccsTimesList = [];
+
+  List<String> CHadeMoTimesList = [];
+
+  List<String> Type2TimesList = [];
+  String type = "";
+
+  // List<String> timings = [
+  //   "01:00 - 02:00",
+  //   "02:00 - 03:00",
+  //   "03:00 - 04:00",
+  //   "04:00 - 05:00",
+  //   "05:00 - 06:00",
+  //   "06:00 - 07:00",
+  //   "07:00 - 08:00",
+  //   "08:00 - 09:00",
+  //   "09:00 - 10:00",
+  //   "10:00 - 11:00",
+  //   "11:00 - 12:00",
+  //   "12:00 - 13:00",
+  //   "13:00 - 14:00",
+  //   "14:00 - 15:00",
+  //   "15:00 - 16:00",
+  //   "16:00 - 17:00",
+  //   "17:00 - 18:00",
+  //   "18:00 - 19:00",
+  //   "19:00 - 20:00",
+  //   "20:00 - 21:00",
+  //   "21:00 - 22:00",
+  //   "22:00 - 23:00",
+  //   "23:00 - 00:00",
+  //   "00:00 - 01:00"
+  // ];
 
   var icon;
+
+  bool selected = false;
   void _onMapCreated(GoogleMapController controller) {
     setState(() {
       mapController = controller;
@@ -120,6 +129,7 @@ class _HomePageState extends State<HomePage> {
                         setState(() {
                           showDetailsButton = true;
                           documentSnapshot = doc;
+                          selected_times.clear();
                           // showSheet(doc, context);
                         });
                       },
@@ -304,41 +314,25 @@ class _HomePageState extends State<HomePage> {
                                                     "Available")
                                                 ? ElevatedButton(
                                                     onPressed: () async {
-                                                      // await FirebaseFirestore
-                                                      //     .instance
-                                                      //     .collection(
-                                                      //         'ev_bunks')
-                                                      //     .doc(documentSnapshot
-                                                      //         .id
-                                                      //         .toString())
-                                                      //     .update({
-                                                      //   'CHadeMo_TIMES': [
-                                                      //     timings[0],
-                                                      //     timings[1],
-                                                      //     timings[2],
-                                                      //     timings[3],
-                                                      //     timings[4],
-                                                      //     timings[5],
-                                                      //     timings[6],
-                                                      //     timings[7],
-                                                      //     timings[8],
-                                                      //     timings[9],
-                                                      //     timings[10],
-                                                      //     timings[11],
-                                                      //     timings[12],
-                                                      //     timings[13],
-                                                      //     timings[14],
-                                                      //     timings[15],
-                                                      //     timings[16],
-                                                      //     timings[17],
-                                                      //     timings[18],
-                                                      //     timings[19],
-                                                      //     timings[20],
-                                                      //     timings[21],
-                                                      //     timings[22],
-                                                      //     timings[23],
-                                                      //   ],
-                                                      // });
+                                                      type = "CCS";
+                                                      selected_times.clear();
+                                                      await FirebaseFirestore
+                                                          .instance
+                                                          .collection(
+                                                              "ev_bunks")
+                                                          .doc(documentSnapshot
+                                                              .id)
+                                                          .get()
+                                                          .then((value) {
+                                                        value
+                                                            .get("CCS_TIMES")
+                                                            .forEach((element) {
+                                                          setState(() {
+                                                            ccsTimesList
+                                                                .add(element);
+                                                          });
+                                                        });
+                                                      });
                                                     },
                                                     child: Text("CCS"),
                                                     style: ElevatedButton
@@ -369,7 +363,28 @@ class _HomePageState extends State<HomePage> {
                                                         .toString() ==
                                                     "Available")
                                                 ? ElevatedButton(
-                                                    onPressed: () {},
+                                                    onPressed: () async {
+                                                      type = "CHadeMo";
+                                                      selected_times.clear();
+                                                      await FirebaseFirestore
+                                                          .instance
+                                                          .collection(
+                                                              "ev_bunks")
+                                                          .doc(documentSnapshot
+                                                              .id)
+                                                          .get()
+                                                          .then((value) {
+                                                        value
+                                                            .get(
+                                                                "CHadeMo_TIMES")
+                                                            .forEach((element) {
+                                                          setState(() {
+                                                            CHadeMoTimesList
+                                                                .add(element);
+                                                          });
+                                                        });
+                                                      });
+                                                    },
                                                     child: Text("CHadeMo"),
                                                     style: ElevatedButton
                                                         .styleFrom(
@@ -399,7 +414,27 @@ class _HomePageState extends State<HomePage> {
                                                         .toString() ==
                                                     "Available")
                                                 ? ElevatedButton(
-                                                    onPressed: () {},
+                                                    onPressed: () async {
+                                                      type = "Type2";
+                                                      selected_times.clear();
+                                                      await FirebaseFirestore
+                                                          .instance
+                                                          .collection(
+                                                              "ev_bunks")
+                                                          .doc(documentSnapshot
+                                                              .id)
+                                                          .get()
+                                                          .then((value) {
+                                                        value
+                                                            .get("Type2_TIMES")
+                                                            .forEach((element) {
+                                                          setState(() {
+                                                            Type2TimesList.add(
+                                                                element);
+                                                          });
+                                                        });
+                                                      });
+                                                    },
                                                     style: ElevatedButton
                                                         .styleFrom(
                                                       primary:
@@ -408,7 +443,7 @@ class _HomePageState extends State<HomePage> {
                                                     child: Text("Type2"),
                                                   )
                                                 : ElevatedButton(
-                                                    onPressed: () {},
+                                                    onPressed: () async {},
                                                     style: ElevatedButton
                                                         .styleFrom(
                                                       primary:
@@ -420,59 +455,79 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                       ],
                                     ),
-                                    // Container(
-                                    //   width: MediaQuery.of(context).size.width,
-                                    //   height: 40,
-                                    //   child: StreamBuilder<DocumentSnapshot>(
-                                    //       stream: FirebaseFirestore.instance
-                                    //           .collection("ev_bunks")
-                                    //           .doc(documentSnapshot.id)
-                                    //           .snapshots(),
-                                    //       builder: (context,
-                                    //           AsyncSnapshot<DocumentSnapshot>
-                                    //               snapshots) {
-                                    //         return ListView.separated(
-                                    //           itemCount: snapshots.data!
-                                    //               .get("CCS")
-                                    //               .forEach((int element) {
-                                    //             return element;
-                                    //           }),
-                                    //           scrollDirection: Axis.horizontal,
-                                    //           itemBuilder: (context, index) {
-                                    //             return Container(
-                                    //               child: ElevatedButton(
-                                    //                 onPressed: () {
-                                    //                   print(index.toString());
-                                    //                   timings.remove(
-                                    //                       timings[index]);
-                                    //                   selected_times.add(
-                                    //                       timings[index]
-                                    //                           .toString());
-                                    //                   setState(() {});
-                                    //                 },
-                                    //                 child: Text(timings[index]
-                                    //                     .toString()),
-                                    //                 style: ElevatedButton
-                                    //                     .styleFrom(
-                                    //                   primary:
-                                    //                       Colors.blue.shade400,
-                                    //                 ),
-                                    //               ),
-                                    //             );
-                                    //           },
-                                    //           separatorBuilder:
-                                    //               (BuildContext context,
-                                    //                   int index) {
-                                    //             return SizedBox(
-                                    //               width: 10,
-                                    //             );
-                                    //           },
-                                    //         );
-                                    //       }),
-                                    // ),
                                     SizedBox(
                                       height: 10,
                                     ),
+                                    Text("Available timings for " + type),
+                                    Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height: 40,
+                                        child: FutureBuilder<DocumentSnapshot>(
+                                            future: FirebaseFirestore.instance
+                                                .collection("ev_bunks")
+                                                .doc(documentSnapshot.id)
+                                                .get(),
+                                            builder: (context, snapshot) {
+                                              return !(snapshot.hasData)
+                                                  ? CircularProgressIndicator()
+                                                  : ListView.separated(
+                                                      itemCount: snapshot.data!
+                                                          .get(type == "CCS"
+                                                              ? 'CCS_TIMES'
+                                                              : type == "Type2"
+                                                                  ? "Type2_TIMES"
+                                                                  : "CHadeMo_TIMES")
+                                                          .length,
+                                                      scrollDirection:
+                                                          Axis.horizontal,
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        return Container(
+                                                          child: ElevatedButton(
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                selected_times.add(snapshot
+                                                                    .data![type ==
+                                                                            "CCS"
+                                                                        ? 'CCS_TIMES'
+                                                                        : type ==
+                                                                                "Type2"
+                                                                            ? "Type2_TIMES"
+                                                                            : "CHadeMo_TIMES"][index]
+                                                                    .toString());
+                                                              });
+                                                            },
+                                                            child: Text(snapshot
+                                                                .data![type ==
+                                                                        "CCS"
+                                                                    ? 'CCS_TIMES'
+                                                                    : type ==
+                                                                            "Type2"
+                                                                        ? "Type2_TIMES"
+                                                                        : "CHadeMo_TIMES"][index]
+                                                                .toString()),
+                                                            style: ElevatedButton
+                                                                .styleFrom(
+                                                                    primary: Colors
+                                                                        .blue
+                                                                        .shade400),
+                                                          ),
+                                                        );
+                                                      },
+                                                      separatorBuilder:
+                                                          (BuildContext context,
+                                                              int index) {
+                                                        return SizedBox(
+                                                          width: 10,
+                                                        );
+                                                      },
+                                                    );
+                                            })),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text("Selected timings"),
                                     (selected_times.isNotEmpty)
                                         ? Container(
                                             width: MediaQuery.of(context)
@@ -500,6 +555,100 @@ class _HomePageState extends State<HomePage> {
                                               scrollDirection: Axis.horizontal,
                                             ))
                                         : Container(),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 50,
+                                      child: ElevatedButton(
+                                          onPressed: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    elevation: 24,
+                                                    backgroundColor:
+                                                        Theme.of(context)
+                                                            .cardColor,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20.0)),
+                                                    title: Text("Confirmation",
+                                                        style: h3_bold),
+                                                    content: Text(
+                                                        "Confirm the booking?",
+                                                        style: h2),
+                                                    actions: <Widget>[
+                                                      ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                                primary: Theme.of(
+                                                                        context)
+                                                                    .cardColor,
+                                                                elevation: 0),
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: Text(
+                                                          "No",
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .greenAccent,
+                                                              fontSize: 18),
+                                                        ),
+                                                      ),
+                                                      ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                                primary: Theme.of(
+                                                                        context)
+                                                                    .cardColor,
+                                                                elevation: 0),
+                                                        onPressed: () async {
+                                                          BotToast.showText(
+                                                              text:
+                                                                  "EV Station Booked!");
+
+                                                          await FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  "ev_bunks")
+                                                              .doc(
+                                                                  documentSnapshot
+                                                                      .id)
+                                                              .update({
+                                                            type == "CCS"
+                                                                ? 'CCS_TIMES'
+                                                                : type ==
+                                                                        "Type2"
+                                                                    ? "Type2_TIMES"
+                                                                    : "CHadeMo_TIMES": FieldValue
+                                                                .arrayRemove(
+                                                                    selected_times),
+                                                          });
+
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: Text(
+                                                          "Yes",
+                                                          style: TextStyle(
+                                                              fontSize: 18,
+                                                              color: Colors
+                                                                  .redAccent),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                });
+                                          },
+                                          child: Text("Book")),
+                                    )
                                   ],
                                 ),
                               ),
