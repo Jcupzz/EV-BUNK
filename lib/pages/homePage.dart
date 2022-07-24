@@ -24,6 +24,9 @@ class _HomePageState extends State<HomePage> {
   List<Marker> myMarker = [];
   late DocumentSnapshot documentSnapshot;
   late String sd = "";
+  late String? info_window_title = "sample_info";
+  late String? info_window_snippet;
+
   var icon;
   void _onMapCreated(GoogleMapController controller) {
     setState(() {
@@ -64,9 +67,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   getIcons() async {
-    final Uint8List markerIcon =
-        await getBytesFromAsset('assets/ev_bunk.png', 200);
-    icon = BitmapDescriptor.fromBytes(markerIcon);
+    // final Uint8List markerIcon =
+    await getBytesFromAsset('assets/ev_bunk.png', 200).then((value) {
+      setState(() {
+        icon = BitmapDescriptor.fromBytes(value);
+      });
+    });
   }
 
   void _getAllLatLongFromFb() async {
@@ -86,36 +92,32 @@ class _HomePageState extends State<HomePage> {
                           LatLng(doc.get('lat'), doc.get('long')).toString()),
                       icon: icon,
                       onTap: () {
-                        setState(() {
+                        setState(() async {
                           showDetailsButton = true;
                           documentSnapshot = doc;
-                          sd = getTitle(doc.id, ref);
-                          print("CURRENT DOCUMENT IS: " + doc.id.toString());
                         });
                       },
                       position: LatLng(doc.get('lat'), doc.get('long')),
-                      infoWindow: InfoWindow(
-                        title: sd,
-                      ),
+                      visible: true,
                       // InfoWindow(title: doc.get('field'), snippet: "Ather: " doc.get('field')),
                     ),
                   );
                 }));
   }
 
-  String getTitle(String id, CollectionReference<Map<String, dynamic>> ref) {
-    print("SUCESSEFEFDFDFDF: " + id.toString());
-    var snapshot;
+  // String getTitle(String id, CollectionReference<Map<String, dynamic>> ref) {
+  //   print("SUCESSEFEFDFDFDF: " + id.toString());
+  //   var snapshot;
 
-    ref.doc(id).collection("port").get().then((QuerySnapshot querySnapshot) {
-      print("SUCESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS: " +
-          querySnapshot.docs[0].data().toString());
+  //   ref.doc(id).collection("port").get().then((QuerySnapshot querySnapshot) {
+  //     print("SUCESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS: " +
+  //         querySnapshot.docs[0].data().toString());
 
-      snapshot = querySnapshot.docs[0].data();
-    });
+  //     snapshot = querySnapshot.docs[0].data();
+  //   });
 
-    return snapshot.toString();
-  }
+  //   return snapshot.toString();
+  // }
 
   @override
   void initState() {
@@ -203,7 +205,7 @@ class _HomePageState extends State<HomePage> {
                                                 onPressed: () async {
                                                   BotToast.showText(
                                                       text:
-                                                          "Confirmed...your auto is on the way!");
+                                                          "EV Station Booked!");
                                                   Navigator.pop(context);
                                                 },
                                                 child: Text(
