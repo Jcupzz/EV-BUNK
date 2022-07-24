@@ -26,6 +26,32 @@ class _HomePageState extends State<HomePage> {
   late String sd = "";
   late String? info_window_title = "sample_info";
   late String? info_window_snippet;
+  List<String> timings = [
+    "01:00 - 02:00",
+    "02:00 - 03:00",
+    "03:00 - 04:00",
+    "04:00 - 05:00",
+    "05:00 - 06:00",
+    "06:00 - 07:00",
+    "07:00 - 08:00",
+    "08:00 - 09:00",
+    "09:00 - 10:00",
+    "10:00 - 11:00",
+    "11:00 - 12:00",
+    "12:00 - 13:00",
+    "13:00 - 14:00",
+    "14:00 - 15:00",
+    "15:00 - 16:00",
+    "16:00 - 17:00",
+    "17:00 - 18:00",
+    "18:00 - 19:00",
+    "19:00 - 20:00",
+    "20:00 - 21:00",
+    "21:00 - 22:00",
+    "22:00 - 23:00",
+    "23:00 - 00:00",
+    "00:00 - 01:00"
+  ];
 
   var icon;
   void _onMapCreated(GoogleMapController controller) {
@@ -211,6 +237,7 @@ class _HomePageState extends State<HomePage> {
 
   void showSheet(QueryDocumentSnapshot<Object?> doc) {
     showModalBottomSheet(
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.horizontal(
             left: Radius.circular(20),
@@ -244,25 +271,35 @@ class _HomePageState extends State<HomePage> {
                           fontWeight: FontWeight.bold,
                         ),
                         children: [
-                          TextSpan(
-                            text: doc.get('CCS').toString(),
-                            style: h14.copyWith(color: Colors.green),
-                          ),
+                          (doc.get('CCS').toString() == "Available")
+                              ? TextSpan(
+                                  text: doc.get('CCS').toString(),
+                                  style: h14.copyWith(color: Colors.green),
+                                )
+                              : TextSpan(
+                                  text: doc.get('CCS').toString(),
+                                  style: h14.copyWith(color: Colors.red),
+                                )
                         ],
                       ),
                     ),
                     RichText(
                       text: TextSpan(
-                        text: "CCS: ",
+                        text: "CHadeMo: ",
                         style: h14.copyWith(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                         ),
                         children: [
-                          TextSpan(
-                            text: doc.get('CCS').toString(),
-                            style: h14.copyWith(color: Colors.green),
-                          ),
+                          (doc.get('CHadeMo').toString() == "Available")
+                              ? TextSpan(
+                                  text: doc.get('CHadeMo').toString(),
+                                  style: h14.copyWith(color: Colors.green),
+                                )
+                              : TextSpan(
+                                  text: doc.get('CHadeMo').toString(),
+                                  style: h14.copyWith(color: Colors.red),
+                                )
                         ],
                       ),
                     ),
@@ -274,13 +311,115 @@ class _HomePageState extends State<HomePage> {
                           fontWeight: FontWeight.bold,
                         ),
                         children: [
-                          TextSpan(
-                            text: doc.get('Type2').toString(),
-                            style: h14.copyWith(color: Colors.green),
-                          ),
+                          (doc.get('Type2').toString() == "Available")
+                              ? TextSpan(
+                                  text: doc.get('Type2').toString(),
+                                  style: h14.copyWith(color: Colors.green),
+                                )
+                              : TextSpan(
+                                  text: doc.get('Type2').toString(),
+                                  style: h14.copyWith(color: Colors.red),
+                                )
                         ],
                       ),
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: (doc.get('CCS').toString() == "Available")
+                                ? ElevatedButton(
+                                    onPressed: () async {},
+                                    child: Text("CCS"),
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Colors.green.shade300,
+                                    ),
+                                  )
+                                : ElevatedButton(
+                                    onPressed: () {},
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Colors.red.shade300,
+                                    ),
+                                    child: Text("CCS"),
+                                  ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            child:
+                                (doc.get('CHadeMo').toString() == "Available")
+                                    ? ElevatedButton(
+                                        onPressed: () {},
+                                        child: Text("CHadeMo"),
+                                        style: ElevatedButton.styleFrom(
+                                          primary: Colors.green.shade300,
+                                        ),
+                                      )
+                                    : ElevatedButton(
+                                        onPressed: () {},
+                                        style: ElevatedButton.styleFrom(
+                                          primary: Colors.red.shade300,
+                                        ),
+                                        child: Text("CHadeMo"),
+                                      ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            child: (doc.get('Type2').toString() == "Available")
+                                ? ElevatedButton(
+                                    onPressed: () {},
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Colors.green.shade300,
+                                    ),
+                                    child: Text("Type2"),
+                                  )
+                                : ElevatedButton(
+                                    onPressed: () {},
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Colors.red.shade300,
+                                    ),
+                                    child: Text("Type2"),
+                                  ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 40,
+                      child: ListView.separated(
+                        itemCount: timings.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              child: Text(timings[index].toString()),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.green.shade300,
+                              ),
+                            ),
+                          );
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
+                          return SizedBox(
+                            width: 10,
+                          );
+                        },
+                      ),
+                    )
                   ],
                 ),
               ),
