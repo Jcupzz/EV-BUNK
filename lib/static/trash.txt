@@ -1,0 +1,74 @@
+ElevatedButton(
+                                onPressed: () async {
+                                  if (documentSnapshot != null) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            elevation: 24,
+                                            backgroundColor:
+                                                Theme.of(context).cardColor,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        20.0)),
+                                            title: Text("Confirmation",
+                                                style: h3_bold),
+                                            content: Text(
+                                                "Confirm the booking?",
+                                                style: h2),
+                                            actions: <Widget>[
+                                              ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    primary: Theme.of(context)
+                                                        .cardColor,
+                                                    elevation: 0),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text(
+                                                  "No",
+                                                  style: TextStyle(
+                                                      color: Colors.greenAccent,
+                                                      fontSize: 18),
+                                                ),
+                                              ),
+                                              ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    primary: Theme.of(context)
+                                                        .cardColor,
+                                                    elevation: 0),
+                                                onPressed: () async {
+                                                  BotToast.showText(
+                                                      text:
+                                                          "EV Station Booked!");
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text(
+                                                  "Yes",
+                                                  style: TextStyle(
+                                                      fontSize: 18,
+                                                      color: Colors.redAccent),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        });
+
+                                    // Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //         builder: (_) =>
+                                    //             Details(documentSnapshot)));
+                                  }
+                                },
+                                child: Text(
+                                  "Book",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.white70,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(8))),
+                              )
