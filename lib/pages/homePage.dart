@@ -92,9 +92,10 @@ class _HomePageState extends State<HomePage> {
                           LatLng(doc.get('lat'), doc.get('long')).toString()),
                       icon: icon,
                       onTap: () {
-                        setState(() async {
+                        setState(() {
                           showDetailsButton = true;
                           documentSnapshot = doc;
+                          showSheet(doc);
                         });
                       },
                       position: LatLng(doc.get('lat'), doc.get('long')),
@@ -141,10 +142,11 @@ class _HomePageState extends State<HomePage> {
               child: Stack(
                 children: [
                   GoogleMap(
-                    mapToolbarEnabled: true,
+                    mapToolbarEnabled: false,
                     buildingsEnabled: true,
                     mapType: MapType.normal,
                     myLocationButtonEnabled: true,
+                    zoomControlsEnabled: false,
                     myLocationEnabled: true,
                     markers: Set.from(myMarker),
                     onMapCreated: _onMapCreated,
@@ -154,96 +156,137 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   (showDetailsButton)
-                      ? Positioned(
-                          bottom: 18,
-                          left: 0,
-                          child: Container(
-                            height: 38,
-                            width: MediaQuery.of(context).size.width * 0.6,
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  if (documentSnapshot != null) {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            elevation: 24,
-                                            backgroundColor:
-                                                Theme.of(context).cardColor,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        20.0)),
-                                            title: Text("Confirmation",
-                                                style: h3_bold),
-                                            content: Text(
-                                                "Confirm the booking?",
-                                                style: h2),
-                                            actions: <Widget>[
-                                              ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                    primary: Theme.of(context)
-                                                        .cardColor,
-                                                    elevation: 0),
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Text(
-                                                  "No",
-                                                  style: TextStyle(
-                                                      color: Colors.greenAccent,
-                                                      fontSize: 18),
-                                                ),
-                                              ),
-                                              ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                    primary: Theme.of(context)
-                                                        .cardColor,
-                                                    elevation: 0),
-                                                onPressed: () async {
-                                                  BotToast.showText(
-                                                      text:
-                                                          "EV Station Booked!");
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Text(
-                                                  "Yes",
-                                                  style: TextStyle(
-                                                      fontSize: 18,
-                                                      color: Colors.redAccent),
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        });
+                      ? Container()
 
-                                    // Navigator.push(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //         builder: (_) =>
-                                    //             Details(documentSnapshot)));
-                                  }
-                                },
-                                child: Text(
-                                  "Book",
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                    primary: Colors.white70,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8))),
-                              ),
-                            ),
-                          ))
+                      // Positioned(
+                      //     bottom: 10,
+                      //     left: 10,
+                      //     right: 10,
+                      //     child: Container(
+                      //       decoration: BoxDecoration(
+                      //         color: Colors.white,
+                      //         borderRadius: BorderRadius.circular(10),
+                      //       ),
+                      //       height: MediaQuery.of(context).size.width * 0.45,
+                      //       width: MediaQuery.of(context).size.width,
+                      //       child: Padding(
+                      //         padding:
+                      //             const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                      //         child: SingleChildScrollView(
+                      //           child: Column(
+                      //             children: [
+
+                      //               Text(
+                      //                 documentSnapshot.get('name').toString(),
+                      //                 style: h2_bold,
+                      //               ),
+                      //               Text(
+                      //                 documentSnapshot.get('name').toString(),
+                      //                 style: h2_bold,
+                      //               ),
+                      //               Text(
+                      //                 documentSnapshot.get('name').toString(),
+                      //                 style: h2_bold,
+                      //               ),
+                      //               Text(
+                      //                 documentSnapshot.get('name').toString(),
+                      //                 style: h2_bold,
+                      //               ),
+                      //               Text(
+                      //                 documentSnapshot.get('name').toString(),
+                      //                 style: h2_bold,
+                      //               ),
+                      //             ],
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ))
                       : Container(),
                 ],
               ),
             )
           : Circular_Loading(),
     );
+  }
+
+  void showSheet(QueryDocumentSnapshot<Object?> doc) {
+    showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.horizontal(
+            left: Radius.circular(20),
+            right: Radius.circular(20),
+          ),
+        ),
+        context: context,
+        builder: (BuildContext b) {
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+              color: Colors.white,
+              height: MediaQuery.of(context).size.height * 0.25,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      doc.get('name').toString(),
+                      style: h2_bold,
+                    ),
+                    Divider(
+                      thickness: 1,
+                      color: Colors.black,
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        text: "CCS: ",
+                        style: h14.copyWith(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: doc.get('CCS').toString(),
+                            style: h14.copyWith(color: Colors.green),
+                          ),
+                        ],
+                      ),
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        text: "CCS: ",
+                        style: h14.copyWith(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: doc.get('CCS').toString(),
+                            style: h14.copyWith(color: Colors.green),
+                          ),
+                        ],
+                      ),
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        text: "Type2: ",
+                        style: h14.copyWith(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: doc.get('Type2').toString(),
+                            style: h14.copyWith(color: Colors.green),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
   }
 
   //functions
@@ -294,7 +337,7 @@ TextStyle h2_bold = TextStyle(
   fontWeight: FontWeight.bold,
 );
 TextStyle h14_bold = TextStyle(
-  fontSize: 10,
+  fontSize: 14,
   fontFamily: GoogleFonts.poppins().fontFamily,
   fontWeight: FontWeight.bold,
 );
