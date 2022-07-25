@@ -1,12 +1,19 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:ev_bunk/Authentication/auth_wrapper.dart';
 import 'package:ev_bunk/firebase_options.dart';
-import 'package:ev_bunk/pages/Nav_Bar.dart';
 import 'package:ev_bunk/pages/homePage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+var prefs;
+bool? isin = false;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  prefs = await SharedPreferences.getInstance().then((value) {
+    isin = value.getBool('isin');
+  });
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -30,7 +37,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
 
       routes: {
-        '/': (context) => Nav_Bar(),
+        '/': (context) => Auth_Wrapper(),
       },
       // home: Nav_Bar(),
     );
