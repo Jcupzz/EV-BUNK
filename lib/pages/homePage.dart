@@ -3,12 +3,16 @@ import 'dart:typed_data';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ev_bunk/Authentication/Register.dart';
+import 'package:ev_bunk/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:ui' as ui;
 
 import '../static/Circular_Loading.dart';
@@ -175,14 +179,27 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("EV-BUNK",
+        title: Text("Ev-Bunk",
             style: TextStyle(
                 fontSize: 20,
                 fontFamily: GoogleFonts.rancho().fontFamily,
                 fontWeight: FontWeight.bold,
                 color: Colors.white)),
         centerTitle: true,
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.black,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout_rounded),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              await SharedPreferences.getInstance().then((value) {
+                value.setBool('isin', false);
+              });
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (builder) => Register()));
+            },
+          ),
+        ],
       ),
       backgroundColor: Theme.of(context).backgroundColor,
       body: currentPostion != null

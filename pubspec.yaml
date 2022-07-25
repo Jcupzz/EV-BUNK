@@ -45,6 +45,8 @@ dependencies:
   shared_preferences: ^2.0.15
   firebase_auth: ^3.3.20
   bulleted_list: ^0.0.1+0.1a
+  flutter_launcher_icons: ^0.9.3
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -53,6 +55,11 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: false
+  image_path: "assets/ev_icon_img.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -74,8 +81,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/ev_bunk.png
-    - assets/auto_img.png
+    - assets/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
