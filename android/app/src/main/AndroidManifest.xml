@@ -9,7 +9,7 @@
    <application
         android:label="ev_bunk"
         android:name="${applicationName}"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/ic_launcher">
         
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCQcdnT6K0q_8ap6ZNZ3Xs_taVyhDg7fx4"/>
